@@ -70,7 +70,9 @@ export function evaluateGeneration(
   console.log(`Majority keys: ${majorityKeys.join(", ")}`);
   if (deviantObjects.length > 0) {
     console.log(
-      `Objects deviating from the majority: ${deviantObjects.join(", ")}`
+      `Objects (indexes) deviating from the majority: ${deviantObjects.join(
+        ", "
+      )}`
     );
   } else {
     console.log("All objects conform to the majority interface.");

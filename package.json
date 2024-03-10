@@ -43,6 +43,8 @@
     "access": "public"
   },
   "bin": {
-    "tstailor": "./dist/cli/cli.mjs"
+    "tstailor": "./dist/cli/cli.mjs",
+    "tstl": "./dist/cli/cli.mjs",
+    "tsify": "./dist/cli/cli.mjs"
   }
 }

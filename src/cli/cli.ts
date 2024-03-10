@@ -5,6 +5,7 @@ import { interfaceify } from "../core/interfaceify";
 program
   .name("tstailor")
   .alias("tstl")
+  .alias("tsify")
   .description("Generate TypeScript interfaces from JSON.")
   .version("1.0.0")
   .argument("<input>", "Input JSON file")
