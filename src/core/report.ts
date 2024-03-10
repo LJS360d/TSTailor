@@ -15,19 +15,14 @@ export function identifyDeviantObjects(
   majorityKeys: string[],
   keyPresenceCount: { [key: string]: number }
 ) {
-  const keyIndexMap = Object.keys(keyPresenceCount).reduce(
-    (acc, key, index) => {
-      acc[key] = index;
-      return acc;
-    },
-    {}
-  );
+  const keyIndexMap = Object.keys(keyPresenceCount).reduce((acc, key, index) => {
+    acc[key] = index;
+    return acc;
+  }, {});
 
   return objectKeyPresence
     .map((presenceArray, index) => {
-      const hasAllMajorityKeys = majorityKeys.every(
-        (key) => presenceArray[keyIndexMap[key]]
-      );
+      const hasAllMajorityKeys = majorityKeys.every((key) => presenceArray[keyIndexMap[key]]);
       return hasAllMajorityKeys ? null : index;
     })
     .filter((index) => index !== null);
@@ -50,31 +45,16 @@ function analyzeObjects(objects: object[]) {
   return { keyPresenceCount, objectKeyPresence };
 }
 
-export function evaluateGeneration(
-  objects: object[],
-  interfaceName: string,
-  report: string
-) {
+export function evaluateGeneration(objects: object[], interfaceName: string, report: string) {
   const { keyPresenceCount, objectKeyPresence } = analyzeObjects(objects);
-  const majorityKeys = determineMajorityInterface(
-    keyPresenceCount,
-    objects.length
-  );
-  const deviantObjects = identifyDeviantObjects(
-    objectKeyPresence,
-    majorityKeys,
-    keyPresenceCount
-  );
+  const majorityKeys = determineMajorityInterface(keyPresenceCount, objects.length);
+  const deviantObjects = identifyDeviantObjects(objectKeyPresence, majorityKeys, keyPresenceCount);
 
   console.log(`Majority interface report for ${interfaceName}:`);
-  console.log(`Majority keys: ${majorityKeys.join(", ")}`);
+  console.log(`Majority keys: ${majorityKeys.join(', ')}`);
   if (deviantObjects.length > 0) {
-    console.log(
-      `Objects (indexes) deviating from the majority: ${deviantObjects.join(
-        ", "
-      )}`
-    );
+    console.log(`Objects (indexes) deviating from the majority: ${deviantObjects.join(', ')}`);
   } else {
-    console.log("All objects conform to the majority interface.");
+    console.log('All objects conform to the majority interface.');
   }
 }

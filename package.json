@@ -9,7 +9,11 @@
   "scripts": {
     "build": "rimraf dist && tsup --config tsup.config.ts",
     "release": "pnpm build && changeset publish",
-    "test": "vitest"
+    "lint:fix": "biome check --apply ./src",
+    "lint:fix-unsafe": "biome check --apply-unsafe ./src",
+    "lint": "biome lint ./src && tsc",
+    "test": "vitest",
+    "prepare": "husky"
   },
   "keywords": [
     "code generation",
@@ -31,6 +35,7 @@
     "chalk": "^5.3.0",
     "commander": "^12.0.0",
     "copyfiles": "^2.4.1",
+    "husky": "^9.0.11",
     "rimraf": "^5.0.5",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3",

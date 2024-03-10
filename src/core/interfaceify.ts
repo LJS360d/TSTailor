@@ -1,39 +1,28 @@
-import { readFileSync, writeFileSync } from "fs";
-import { evaluateGeneration } from "./report";
-import { KeyTypeMap } from "./types/keytypemap.type";
+import { readFileSync, writeFileSync } from 'node:fs';
+import { evaluateGeneration } from './report';
+import type { KeyTypeMap } from './types/keytypemap.type';
 
 const globalInterfaceRegistry: { [interfaceName: string]: string } = {};
 
 function getType(value: any, parentInterfaceName: string, key: string): string {
   if (Array.isArray(value)) {
-    const itemType =
-      value.length > 0 ? getType(value[0], parentInterfaceName, key) : "any";
+    const itemType = value.length > 0 ? getType(value[0], parentInterfaceName, key) : 'any';
     return `${itemType}[]`;
-  } else if (typeof value === "object" && value !== null) {
-    const subInterfaceName = `${parentInterfaceName}${
-      key.charAt(0).toUpperCase() + key.slice(1)
-    }`;
+  }
+  if (typeof value === 'object' && value !== null) {
+    const subInterfaceName = `${parentInterfaceName}${key.charAt(0).toUpperCase() + key.slice(1)}`;
     if (!globalInterfaceRegistry[subInterfaceName]) {
-      globalInterfaceRegistry[subInterfaceName] = getInterfaceDefinition(
-        [value],
-        subInterfaceName
-      );
+      globalInterfaceRegistry[subInterfaceName] = getInterfaceDefinition([value], subInterfaceName);
     }
     return subInterfaceName;
-  } else {
-    return typeof value;
   }
+  return typeof value;
 }
 
-export function getInterfaceDefinition(
-  objects: object[],
-  interfaceName: string
-): string {
+export function getInterfaceDefinition(objects: object[], interfaceName: string): string {
   const keyTypeMap: KeyTypeMap = {};
   // Initialize with all keys from the first object as a baseline
-  const keyPresenceMap: { [key: string]: boolean } = Object.keys(
-    objects[0]
-  ).reduce((acc, key) => {
+  const keyPresenceMap: { [key: string]: boolean } = Object.keys(objects[0]).reduce((acc, key) => {
     acc[key] = true;
     return acc;
   }, {});
@@ -42,8 +31,7 @@ export function getInterfaceDefinition(
     // For subsequent objects, adjust presence map based on actual presence
     if (index > 0) {
       Object.keys(keyPresenceMap).forEach((key) => {
-        keyPresenceMap[key] =
-          keyPresenceMap[key] && Object.hasOwnProperty.call(object, key);
+        keyPresenceMap[key] = keyPresenceMap[key] && Object.hasOwnProperty.call(object, key);
       });
     }
 
@@ -58,36 +46,35 @@ export function getInterfaceDefinition(
 
   let interfaceDefinition = `interface ${interfaceName} {\n`;
   Object.entries(keyTypeMap).forEach(([key, types]) => {
-    const typeString = Array.from(types).join(" | ");
+    const typeString = Array.from(types).join(' | ');
     // Append '?' to keys not present in all objects
-    const optionalMark = !keyPresenceMap[key] ? "?" : "";
+    const optionalMark = !keyPresenceMap[key] ? '?' : '';
     interfaceDefinition += `  ${key}${optionalMark}: ${typeString};\n`;
   });
-  interfaceDefinition += "}\n\n";
+  interfaceDefinition += '}\n\n';
 
   return interfaceDefinition;
 }
 
 export function interfaceify(
   inputPath: string,
-  outputPath: string = "generatedInterface.ts",
-  interfaceName: string = "GeneratedInterface",
-  report: string = ""
+  outputPath = 'generatedInterface.ts',
+  interfaceName = 'GeneratedInterface',
+  report = ''
 ) {
   console.log(`Reading JSON from ${inputPath}`);
-  let json = JSON.parse(readFileSync(inputPath, "utf-8"));
+  let json = JSON.parse(readFileSync(inputPath, 'utf-8'));
   if (!Array.isArray(json)) {
     json = [json];
   }
-  console.log("Generating interface definitions...");
+  console.log('Generating interface definitions...');
   // ? loop for API usage, irrelevant for CLI
   for (const prop of Object.getOwnPropertyNames(globalInterfaceRegistry)) {
     delete globalInterfaceRegistry[prop];
   }
   evaluateGeneration(json, interfaceName, report);
   const mainInterface = getInterfaceDefinition(json, interfaceName);
-  let allInterfaces =
-    Object.values(globalInterfaceRegistry).join("\n") + mainInterface;
+  const allInterfaces = Object.values(globalInterfaceRegistry).join('\n') + mainInterface;
   console.log(`Writing interface definitions to ${outputPath}`);
   writeFileSync(outputPath, allInterfaces);
 }
