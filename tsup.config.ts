@@ -1,16 +1,16 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from "tsup";
 
 export default defineConfig({
-	entry: ['src/'],
-	outDir: 'dist',
-	splitting: false,
-	sourcemap: true,
-	dts: true,
-	name: 'fonzi2',
-	clean: true,
-	treeshake: true,
-	format: ['esm', 'cjs'],
-	loader: {
-		'.json': 'copy',
-	},
+  entry: ["src/"],
+  outDir: "dist",
+  splitting: false,
+  sourcemap: false,
+  dts: true,
+  name: "tstailor",
+  clean: true,
+  treeshake: true,
+  format: ["esm"],
+  loader: {
+    ".json": "copy",
+  },
 });
