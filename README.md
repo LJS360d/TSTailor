@@ -23,7 +23,7 @@ This installs TSTailor globally on your system, making it accessible from anywhe
 Using TSTailor is as simple as running a command in your terminal. Here's the basic syntax:
 
 ```bash
-tstailor -i <inputPath> -o <outputPath> -n <interfaceName> -r <reportPath>
+tstailor <inputPath> -o <outputPath> -n <interfaceName> -r <reportPath>
 ```
 - -i, --input <inputPath>: Path to the input JSON file.
 - -o, --output <outputPath>: (Optional) Path to save the generated TypeScript interface file. Default is generatedInterface.ts.
@@ -32,7 +32,7 @@ tstailor -i <inputPath> -o <outputPath> -n <interfaceName> -r <reportPath>
 
 Example
 ```bash
-tstailor -i ./data/pokemon.json -o ./types/pokemon.ts -n Pokemon -r ./reports/pokemon-report.txt
+tstailor ./data/pokemon.json -o ./types/pokemon.ts -n Pokemon -r ./reports/pokemon-report.txt
 ```
 
 This command reads pokemon.json, generates a TypeScript interface named Pokemon in ./types/pokemon.ts, and saves a deviation report in ./reports/pokemon-report.txt.
