@@ -16,13 +16,19 @@ export function identifyDeviantObjects(
   keyPresenceCount: { [key: string]: number }
 ) {
   const keyIndexMap = Object.keys(keyPresenceCount).reduce((acc, key, index) => {
-    acc[key] = index;
+    acc.set(key, index);
     return acc;
-  }, {});
+  }, new Map<string, number>());
 
   return objectKeyPresence
     .map((presenceArray, index) => {
-      const hasAllMajorityKeys = majorityKeys.every((key) => presenceArray[keyIndexMap[key]]);
+      const hasAllMajorityKeys = majorityKeys.every((key) => {
+        const index = keyIndexMap.get(key);
+        if (index === undefined) {
+          return false;
+        }
+        return !!presenceArray.at(index);
+      });
       return hasAllMajorityKeys ? null : index;
     })
     .filter((index) => index !== null);

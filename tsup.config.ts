@@ -1,16 +1,16 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ["src/"],
-  outDir: "dist",
+  entry: ['src/'],
+  outDir: 'dist',
   splitting: false,
   sourcemap: false,
   dts: true,
-  name: "tstailor",
+  name: 'tstailor',
   clean: true,
   treeshake: true,
-  format: ["esm"],
+  format: ['cjs'],
   loader: {
-    ".json": "copy",
+    '.json': 'copy',
   },
 });

@@ -13,6 +13,7 @@
     "lint:fix-unsafe": "biome check --apply-unsafe ./src",
     "lint": "biome lint ./src && tsc",
     "test": "vitest",
+    "dev": "ts-node ./test/api.spec.ts",
     "prepare": "husky"
   },
   "keywords": [
@@ -37,6 +38,7 @@
     "copyfiles": "^2.4.1",
     "husky": "^9.0.11",
     "rimraf": "^5.0.5",
+    "ts-node": "^10.9.2",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3",
     "vitest": "^1.2.0"
@@ -48,8 +50,8 @@
     "access": "public"
   },
   "bin": {
-    "tstailor": "./dist/cli/cli.mjs",
-    "tstl": "./dist/cli/cli.mjs",
-    "tsify": "./dist/cli/cli.mjs"
+    "tstailor": "./dist/cli/cli.js",
+    "tstl": "./dist/cli/cli.js",
+    "tsify": "./dist/cli/cli.js"
   }
 }

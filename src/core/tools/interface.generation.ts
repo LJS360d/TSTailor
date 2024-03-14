@@ -1,6 +1,4 @@
-import { readFileSync, writeFileSync } from 'node:fs';
-import { evaluateGeneration } from './report';
-import type { KeyTypeMap } from './types/keytypemap.type';
+import type { KeyTypeMap } from '../types/keytypemap.type';
 
 const globalInterfaceRegistry: { [interfaceName: string]: string } = {};
 
@@ -19,16 +17,19 @@ function getType(value: any, parentInterfaceName: string, key: string): string {
   return typeof value;
 }
 
+// TODO extract logic
+function generateKeyTypeMap() {}
+
 export function getInterfaceDefinition(objects: object[], interfaceName: string): string {
-  const keyTypeMap: KeyTypeMap = {};
   // Initialize with all keys from the first object as a baseline
   const keyPresenceMap: { [key: string]: boolean } = Object.keys(objects[0]).reduce((acc, key) => {
     acc[key] = true;
     return acc;
   }, {} as any);
 
+  // For subsequent objects, adjust presence map based on actual presence
+  const keyTypeMap: KeyTypeMap = {};
   objects.forEach((object, index) => {
-    // For subsequent objects, adjust presence map based on actual presence
     if (index > 0) {
       Object.keys(keyPresenceMap).forEach((key) => {
         keyPresenceMap[key] = keyPresenceMap[key] && Object.hasOwnProperty.call(object, key);
@@ -55,29 +56,3 @@ export function getInterfaceDefinition(objects: object[], interfaceName: string)
 
   return interfaceDefinition;
 }
-
-export function interfaceify(
-  inputPath: string,
-  outputPath = 'generatedInterface.ts',
-  interfaceName = 'GeneratedInterface',
-  report = ''
-) {
-  console.log(`Reading JSON from ${inputPath}`);
-  let json = JSON.parse(readFileSync(inputPath, 'utf-8'));
-  if (!Array.isArray(json)) {
-    json = [json];
-  }
-  console.log('Generating interface definitions...');
-  // ? loop for API usage, irrelevant for CLI
-  for (const prop of Object.getOwnPropertyNames(globalInterfaceRegistry)) {
-    delete globalInterfaceRegistry[prop];
-  }
-  evaluateGeneration(json, interfaceName, report);
-  const mainInterface = getInterfaceDefinition(json, interfaceName);
-  const allInterfaces = Object.values(globalInterfaceRegistry).join('\n') + mainInterface;
-  console.log(`Writing interface definitions to ${outputPath}`);
-  writeFileSync(outputPath, allInterfaces);
-}
-
-// ? EXAMPLE API USE
-// interfaceify("pokemon.json", "pokemon.parsed.ts", "ParsedPokemonInfo");
