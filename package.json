@@ -1,6 +1,6 @@
 {
   "name": "tstailor",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "CLI tool + API to generate TypeScript interfaces from raw JSON objects",
   "engines": {
     "node": ">=18"
