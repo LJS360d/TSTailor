@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { program } from 'commander';
-import { interfaceify } from '../core/interfaceify';
+import { interfaceify } from '../core/entry';
 
 program
   .name('tstailor')
@@ -10,8 +10,12 @@ program
   .version('1.0.0')
   .argument('<input>', 'Input JSON file')
   .option('-o, --output <output>', 'Output file for TypeScript interfaces', 'generatedInterface.ts')
-  .option('-n, --name <name>', 'Interface name', 'MainInterface')
-  .option('-r, --report <report>', 'Path to save the report file')
+  .option('-n, --name <name>', 'Interface name', 'GeneratedInterface')
+  .option(
+    '-r, --report <report>',
+    'Specify wether to add the report to the generated file or not',
+    true
+  )
   .action((input, options) => {
     try {
       interfaceify(input, options.output, options.name, options.report);

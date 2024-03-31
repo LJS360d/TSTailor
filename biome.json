@@ -39,7 +39,8 @@
     "rules": {
       "recommended": true,
       "style": {
-        "noNonNullAssertion": "warn"
+        "noNonNullAssertion": "warn",
+        "noParameterAssign": "off"
       },
       "suspicious": {
         "noArrayIndexKey": "off",

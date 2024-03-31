@@ -51,16 +51,28 @@ function analyzeObjects(objects: object[]) {
   return { keyPresenceCount, objectKeyPresence };
 }
 
-export function evaluateGeneration(objects: object[], interfaceName: string, report: string) {
+export function evaluateGeneration(
+  objects: object[],
+  interfaceName: string,
+  doGenerateReport: boolean
+): string {
   const { keyPresenceCount, objectKeyPresence } = analyzeObjects(objects);
   const majorityKeys = determineMajorityInterface(keyPresenceCount, objects.length);
   const deviantObjects = identifyDeviantObjects(objectKeyPresence, majorityKeys, keyPresenceCount);
 
-  console.log(`Majority interface report for ${interfaceName}:`);
-  console.log(`Majority keys: ${majorityKeys.join(', ')}`);
-  if (deviantObjects.length > 0) {
-    console.log(`Objects (indexes) deviating from the majority: ${deviantObjects.join(', ')}`);
-  } else {
-    console.log('All objects conform to the majority interface.');
+  const reportLines = [
+    `Interface report for ${interfaceName}:`,
+    `Majority keys: ${majorityKeys.join(', ')}`,
+    deviantObjects.length > 0
+      ? `Objects (indexes) deviating from the majority: ${deviantObjects.join(', ')}`
+      : 'All objects conform to the majority interface.',
+  ];
+
+  const report = reportLines.join('\n');
+
+  console.log(report);
+  if (doGenerateReport) {
+    return report;
   }
+  return '';
 }

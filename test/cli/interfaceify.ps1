@@ -1,0 +1,1 @@
+tstailor ../input/pokemon.json -o ../output/pokemon.ts -n ParsedPokemon

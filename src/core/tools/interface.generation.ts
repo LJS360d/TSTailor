@@ -1,6 +1,7 @@
-import type { KeyTypeMap } from '../types/keytypemap.type';
+import type { KeyPresenceMap, KeyTypeMap } from '../types/key.types';
+import { toCapitalized } from '../utils/formatting.utils';
 
-const globalInterfaceRegistry: { [interfaceName: string]: string } = {};
+export const globalInterfaceRegistry: { [interfaceName: string]: string } = {};
 
 function getType(value: any, parentInterfaceName: string, key: string): string {
   if (Array.isArray(value)) {
@@ -8,7 +9,7 @@ function getType(value: any, parentInterfaceName: string, key: string): string {
     return `${itemType}[]`;
   }
   if (typeof value === 'object' && value !== null) {
-    const subInterfaceName = `${parentInterfaceName}${key.charAt(0).toUpperCase() + key.slice(1)}`;
+    const subInterfaceName = `${parentInterfaceName}${toCapitalized(key)}`;
     if (!globalInterfaceRegistry[subInterfaceName]) {
       globalInterfaceRegistry[subInterfaceName] = getInterfaceDefinition([value], subInterfaceName);
     }
@@ -17,17 +18,11 @@ function getType(value: any, parentInterfaceName: string, key: string): string {
   return typeof value;
 }
 
-// TODO extract logic
-function generateKeyTypeMap() {}
-
-export function getInterfaceDefinition(objects: object[], interfaceName: string): string {
-  // Initialize with all keys from the first object as a baseline
-  const keyPresenceMap: { [key: string]: boolean } = Object.keys(objects[0]).reduce((acc, key) => {
-    acc[key] = true;
-    return acc;
-  }, {} as any);
-
-  // For subsequent objects, adjust presence map based on actual presence
+function generateKeyTypeMap(
+  objects: object[],
+  keyPresenceMap: KeyPresenceMap,
+  interfaceName: string
+) {
   const keyTypeMap: KeyTypeMap = {};
   objects.forEach((object, index) => {
     if (index > 0) {
@@ -44,6 +39,19 @@ export function getInterfaceDefinition(objects: object[], interfaceName: string)
       keyTypeMap[key].add(valueType);
     });
   });
+  return keyTypeMap;
+}
+
+export function getInterfaceDefinition(objects: object[], interfaceName: string): string {
+  // Initialize with all keys from the first object as a baseline
+  const keyPresenceMap: KeyPresenceMap = Object.keys(objects[0]).reduce((acc, key) => {
+    acc[key] = true;
+    return acc;
+  }, {} as any);
+
+  // For subsequent objects, adjust presence map based on actual presence
+  // ! Has side effects on keyPresenceMap
+  const keyTypeMap: KeyTypeMap = generateKeyTypeMap(objects, keyPresenceMap, interfaceName);
 
   let interfaceDefinition = `interface ${interfaceName} {\n`;
   Object.entries(keyTypeMap).forEach(([key, types]) => {

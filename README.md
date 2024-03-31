@@ -27,12 +27,12 @@ tstailor <inputPath> -o <outputPath> -n <interfaceName> -r <reportPath>
 ```
 - -i, --input <inputPath>: Path to the input JSON file.
 - -o, --output <outputPath>: (Optional) Path to save the generated TypeScript interface file. Default is generatedInterface.ts.
-- -n, --interfaceName <interfaceName>: (Optional) Name of the generated interface. Default is MainInterface.
-- -r, --report <reportPath>: (Optional) Path to save the deviation report. If not provided, the report is printed to the console.
+- -n, --interfaceName <interfaceName>: (Optional) Name of the generated interface. Default is GeneratedInterface.
+- -r, --report <reportPath>: (Optional) Specify wether or not to generate the report for the interface. Default is true
 
 Example
 ```bash
-tstailor ./data/pokemon.json -o ./types/pokemon.ts -n Pokemon -r ./reports/pokemon-report.txt
+tstailor ./data/pokemon.json -o ./types/pokemon.ts -n Pokemon -r false
 ```
 
 This command reads pokemon.json, generates a TypeScript interface named Pokemon in ./types/pokemon.ts, and saves a deviation report in ./reports/pokemon-report.txt.
