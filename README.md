@@ -23,7 +23,7 @@ This installs TSTailor globally on your system, making it accessible from anywhe
 Using TSTailor is as simple as running a command in your terminal. Here's the basic syntax:
 
 ```bash
-tstailor <inputPath> -o <outputPath> -n <interfaceName> -r <reportPath>
+tstailor <inputPath> -o <outputPath> -n <interfaceName> -r <true/false>
 ```
 - -i, --input <inputPath>: Path to the input JSON file.
 - -o, --output <outputPath>: (Optional) Path to save the generated TypeScript interface file. Default is generatedInterface.ts.
